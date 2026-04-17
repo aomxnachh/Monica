@@ -1,0 +1,34 @@
+{
+  "name": "monica-music-bot",
+  "version": "1.0.0",
+  "description": "Monica - Discord Music Bot with Interactive UI",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsx src/main.ts",
+    "postinstall": "YOUTUBE_DL_SKIP_PYTHON_CHECK=1 node node_modules/youtube-dl-exec/scripts/postinstall.mjs || true"
+  },
+  "dependencies": {
+    "@discord-player/extractor": "^7.2.0",
+    "@discordjs/voice": "^0.19.2",
+    "@discordx/importer": "^1.3.3",
+    "@distube/ytdl-core": "^4.16.12",
+    "discord-player": "^7.2.0",
+    "discord.js": "^14.26.3",
+    "discordx": "^11.13.3",
+    "dotenv": "^16.4.5",
+    "ffmpeg-static": "^5.2.0",
+    "mediaplex": "^1.0.0",
+    "play-dl": "^1.9.7",
+    "reflect-metadata": "^0.2.2",
+    "youtube-dl-exec": "^3.1.5",
+    "youtubei.js": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.39",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
