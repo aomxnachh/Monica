@@ -1,4 +1,4 @@
-import { type StringSelectMenuInteraction } from 'discord.js';
+import { type StringSelectMenuInteraction, MessageFlags } from 'discord.js';
 import { Discord, SelectMenuComponent } from 'discordx';
 import { useQueue, type QueueFilters } from 'discord-player';
 import { buildNowPlayingEmbed, buildMusicComponents } from '../utils/MusicEmbed.js';
@@ -16,7 +16,7 @@ export class MusicMenus {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
+      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -41,7 +41,7 @@ export class MusicMenus {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: '❌ Nothing is playing!', ephemeral: true });
+      await interaction.followUp({ content: '❌ Nothing is playing!', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -78,7 +78,7 @@ export class MusicMenus {
       console.error('[Filter Error]', err);
       await interaction.followUp({
         content: 'Could not apply filter. Make sure FFmpeg is installed.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }

@@ -1,6 +1,7 @@
 import {
   ApplicationCommandOptionType,
   EmbedBuilder,
+  MessageFlags,
   PermissionFlagsBits,
   type CommandInteraction,
   type TextChannel,
@@ -26,7 +27,7 @@ export class ClearCommand {
     amount: number,
     interaction: CommandInteraction,
   ): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const channel = interaction.channel as TextChannel;
 

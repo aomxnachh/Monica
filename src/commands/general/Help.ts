@@ -1,4 +1,4 @@
-import { EmbedBuilder, type CommandInteraction } from 'discord.js';
+import { EmbedBuilder, MessageFlags, type CommandInteraction } from 'discord.js';
 import { Discord, Slash } from 'discordx';
 
 const COMMANDS = [
@@ -44,7 +44,7 @@ const COMMANDS = [
 export class HelpCommand {
   @Slash({ description: 'Show all commands and how to use them', name: 'help' })
   async help(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const embed = new EmbedBuilder()
       .setColor(0x5865F2)

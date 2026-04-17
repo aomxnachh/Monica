@@ -3,6 +3,7 @@ import {
   type CommandInteraction,
   EmbedBuilder,
   type GuildMember,
+  MessageFlags,
   type TextChannel,
   type VoiceBasedChannel,
 } from 'discord.js';
@@ -63,7 +64,7 @@ export class MusicCommands {
     interaction: CommandInteraction,
     _client: Client,
   ): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const guildId = interaction.guildId!;
     await lastAddedMessages.get(guildId)?.delete().catch(() => null);
@@ -121,7 +122,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Stop playback and clear the queue', name: 'stop' })
   async stop(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = useQueue(interaction.guildId!);
     if (!queue) {
@@ -144,7 +145,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Skip the current track', name: 'skip' })
   async skip(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -160,7 +161,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Play the previous track', name: 'previous' })
   async previous(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = useQueue(interaction.guildId!);
     if (!queue) {
@@ -181,7 +182,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Pause or resume playback', name: 'pause' })
   async pause(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -210,7 +211,7 @@ export class MusicCommands {
     amount: number,
     interaction: CommandInteraction,
   ): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -239,7 +240,7 @@ export class MusicCommands {
     mode: number,
     interaction: CommandInteraction,
   ): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -254,7 +255,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Shuffle the current queue', name: 'shuffle' })
   async shuffle(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -272,7 +273,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Show the current queue', name: 'queue' })
   async queue(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = useQueue(interaction.guildId!);
 
@@ -313,7 +314,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Show the now-playing dashboard', name: 'nowplaying' })
   async nowplaying(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -336,7 +337,7 @@ export class MusicCommands {
 
   @Slash({ description: 'Clear all tracks from the queue (keeps current)', name: 'clear' })
   async clearQueue(interaction: CommandInteraction): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const queue = assertQueue(interaction);
     if (!queue) return;
@@ -362,7 +363,7 @@ export class PlayShortcut {
     interaction: CommandInteraction,
     _client: Client,
   ): Promise<void> {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const guildId = interaction.guildId!;
     await lastAddedMessages.get(guildId)?.delete().catch(() => null);
