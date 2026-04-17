@@ -261,7 +261,7 @@ export class YouTubeExtractor extends BaseExtractor {
       throw new Error(`[YouTubeExtractor] yt-dlp process error: ${err.message}`);
     });
 
-    return Readable.from(child.stdout);
+    return child.stdout as Readable;
   }
 
   // ── Related (autoplay) ────────────────────────────────────────────────────
