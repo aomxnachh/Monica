@@ -1,4 +1,4 @@
-import { EmbedBuilder, MessageFlags, type CommandInteraction } from 'discord.js';
+import { EmbedBuilder, type CommandInteraction } from 'discord.js';
 import { Discord, Slash } from 'discordx';
 
 const COMMANDS = [

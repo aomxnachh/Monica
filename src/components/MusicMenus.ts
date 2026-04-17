@@ -1,4 +1,4 @@
-import { type StringSelectMenuInteraction, MessageFlags } from 'discord.js';
+import { type StringSelectMenuInteraction } from 'discord.js';
 import { Discord, SelectMenuComponent } from 'discordx';
 import { useQueue, type QueueFilters } from 'discord-player';
 import { buildNowPlayingEmbed, buildMusicComponents } from '../utils/MusicEmbed.js';

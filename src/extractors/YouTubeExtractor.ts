@@ -19,8 +19,9 @@ import {
   type GuildQueueHistory,
   type SearchQueryType,
 } from 'discord-player';
-import { execFile, execFileSync, execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { Readable } from 'node:stream';
+import { spawn } from 'node:child_process';
+import { writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,21 +29,8 @@ import playdl from 'play-dl';
 
 // ─── yt-dlp binary path ───────────────────────────────────────────────────────
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
-
-function resolveYtdlp(): string {
-  if (process.platform === 'win32') {
-    return join(__dirname, '../../node_modules/youtube-dl-exec/bin/yt-dlp.exe');
-  }
-  // On Linux: try PATH first, then common Nix/system locations
-  try { return execSync('which yt-dlp', { encoding: 'utf8' }).trim(); } catch { /* not in PATH */ }
-  for (const p of ['/usr/local/bin/yt-dlp', '/usr/bin/yt-dlp', '/nix/var/nix/profiles/default/bin/yt-dlp']) {
-    try { execFileSync(p, ['--version'], { stdio: 'ignore' }); return p; } catch { /* skip */ }
-  }
-  return 'yt-dlp'; // last resort
-}
-
-const YTDLP_BIN = resolveYtdlp();
-console.log('[YouTubeExtractor] yt-dlp binary:', YTDLP_BIN);
+// Resolve from project root regardless of whether we're in src/ or dist/
+const YTDLP_BIN = join(__dirname, '../../node_modules/youtube-dl-exec/bin/yt-dlp.exe');
 
 // ─── Cookie bootstrap (call once before any stream requests) ─────────────────
 let _cookieFile: string | null = null;
@@ -114,11 +102,9 @@ export class YouTubeExtractor extends BaseExtractor {
     this.protocols = ['ytsearch', 'youtube'];
     await bootstrapYouTubeCookies();
 
-    try {
-      const ver = execFileSync(YTDLP_BIN, ['--version'], { encoding: 'utf8' }).trim();
-      console.log(`[YouTubeExtractor] ✅ yt-dlp version: ${ver}`);
-    } catch (e) {
-      console.warn(`[YouTubeExtractor] ⚠  yt-dlp not working: ${(e as Error).message}`);
+    if (!existsSync(YTDLP_BIN)) {
+      console.warn(`[YouTubeExtractor] ⚠  yt-dlp binary not found at ${YTDLP_BIN}`);
+      console.warn('  Run: YOUTUBE_DL_SKIP_PYTHON_CHECK=1 npm install');
     }
   }
 
@@ -243,35 +229,38 @@ export class YouTubeExtractor extends BaseExtractor {
 
   override async stream(track: Track): Promise<ExtractorStreamable> {
     const videoId = extractVideoId(track.url);
-    const ytUrl   = videoId
+    const url     = videoId
       ? `https://www.youtube.com/watch?v=${videoId}`
       : track.url;
 
     const args: string[] = [
-      ytUrl,
+      url,
       '--format', 'bestaudio[ext=webm]/bestaudio/best',
-      '--get-url',       // print direct audio URL instead of downloading
       '--no-warnings',
       '--no-playlist',
+      '-o', '-', // pipe to stdout
     ];
-    if (_cookieFile) args.push('--cookies', _cookieFile);
 
-    const audioUrl = await new Promise<string>((resolve, reject) => {
-      execFile(YTDLP_BIN, args, { timeout: 30_000 }, (error, stdout, stderr) => {
-        if (error) {
-          const msg = (stderr.trim() || error.message).split('\n')[0];
-          console.error('[yt-dlp] error:', msg);
-          reject(new Error(`yt-dlp failed: ${msg}`));
-        } else {
-          const url = stdout.trim().split('\n')[0].trim();
-          if (!url) reject(new Error('yt-dlp returned empty URL'));
-          else resolve(url);
-        }
-      });
+    if (_cookieFile) {
+      args.push('--cookies', _cookieFile);
+    }
+
+    const child = spawn(YTDLP_BIN, args, {
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
 
-    console.log(`[yt-dlp] got URL for "${track.title}" (${audioUrl.slice(0, 60)}...)`);
-    return audioUrl;
+    child.stderr.on('data', (d: Buffer) => {
+      const line = d.toString().trim();
+      if (line && !line.startsWith('[download]')) {
+        this.debug(`[yt-dlp] ${line}`);
+      }
+    });
+
+    child.on('error', (err) => {
+      throw new Error(`[YouTubeExtractor] yt-dlp process error: ${err.message}`);
+    });
+
+    return Readable.from(child.stdout);
   }
 
   // ── Related (autoplay) ────────────────────────────────────────────────────

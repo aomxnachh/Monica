@@ -1,7 +1,6 @@
 import {
   ApplicationCommandOptionType,
   EmbedBuilder,
-  MessageFlags,
   PermissionFlagsBits,
   type CommandInteraction,
   type TextChannel,

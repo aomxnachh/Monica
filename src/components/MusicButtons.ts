@@ -1,4 +1,4 @@
-import { type ButtonInteraction, MessageFlags } from 'discord.js';
+import type { ButtonInteraction } from 'discord.js';
 import { ButtonComponent, Discord } from 'discordx';
 import { QueueRepeatMode, useQueue } from 'discord-player';
 import { buildNowPlayingEmbed, buildMusicComponents } from '../utils/MusicEmbed.js';
@@ -29,7 +29,7 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
@@ -51,12 +51,12 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
     if (queue.history.isEmpty()) {
-      await interaction.followUp({ content: 'No previous track in history.', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'No previous track in history.', ephemeral: true });
       return;
     }
 
@@ -72,7 +72,7 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
@@ -93,7 +93,7 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
@@ -109,12 +109,12 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
     if (queue.tracks.size < 2) {
-      await interaction.followUp({ content: 'Need at least 2 tracks in queue to shuffle.', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Need at least 2 tracks in queue to shuffle.', ephemeral: true });
       return;
     }
 
@@ -130,7 +130,7 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
@@ -156,7 +156,7 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
@@ -178,7 +178,7 @@ export class MusicButtons {
 
     const queue = useQueue(interaction.guildId!);
     if (!queue?.isPlaying()) {
-      await interaction.followUp({ content: 'Nothing is playing!', flags: MessageFlags.Ephemeral });
+      await interaction.followUp({ content: 'Nothing is playing!', ephemeral: true });
       return;
     }
 
