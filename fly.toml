@@ -1,0 +1,15 @@
+[app]
+name = "monica-music-bot"
+primary_region = "sin" # Singapore — เปลี่ยนได้ตามต้องการ
+
+[build]
+
+[env]
+NODE_ENV = "production"
+
+# Secrets (BOT_TOKEN, YOUTUBE_COOKIE ฯลฯ) ใส่ผ่าน fly secrets set แทน
+
+[[vm]]
+memory = "1gb"
+cpu_kind = "shared"
+cpus = 1
